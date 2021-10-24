@@ -240,6 +240,7 @@ ul li {
 /* On mouse-over, add a deeper shadow */
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  cursor: default;
 }
 
 /* Add some padding inside the card container */
@@ -249,7 +250,7 @@ ul li {
 #myChart {
     padding-left: 0px;
     padding-right: 0;
-    margin-left: 25px;
+    margin-left: auto;
     margin-right: auto;
     display: block;
     width: 80%;
@@ -263,4 +264,75 @@ ul li {
 canvas{
   background:#fff;
   height:100px;
+}
+
+.div_cal {
+  margin: 20px; float: left; background-color: #BEBEBE; border-radius: 100%; width: 60px; height: 60px; color: white; text-align: center; font-size: 35px; padding-top: 4px;
+}
+
+.pe_vnizy {
+  margin-top: 5px;
+  color: black;
+  font-size: 9px;
+  text-align: center;
+  font-weight: bolder;
+}
+.div_btn {
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  width: 50px;
+  height: 20px;
+  padding: 5px;
+  margin: 1px;
+  border-radius: 2px;
+  background-color: violet;
+}
+.div_btn1 {
+  display: flex;
+  width: 40px;
+  height: 20px;
+
+  margin: 30px;
+  border-radius: 2px;
+  background-color: purple;
+}
+.div_btn2 {
+  display: flex;
+  width: 40px;
+  height: 20px;
+
+  margin: 30px;
+  border-radius: 2px;
+  background-color: violet;
+}
+.div_btn3 {
+  display: flex;
+  width: 40px;
+  height: 20px;
+  margin: 30px;
+  border-radius: 2px;
+  background-color: gray;
+}
+.div_btn4 {
+  display: flex;
+  width: 40px;
+  height: 20px;
+  margin: 30px;
+  border-radius: 2px;
+  background-color: black;
+}
+
+.progress {
+  width: 300px;
+  
+}
+
+#bar-chart {
+  padding-left: 0px;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 80%;
 }

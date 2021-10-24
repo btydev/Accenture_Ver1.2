@@ -12,6 +12,7 @@ const labels = [
     "2016",
     "2017",
     "2018",
+
 ];
 
 const data = {
@@ -20,7 +21,7 @@ const data = {
         {
             type: 'line',
             label: 'Фактическое',
-            data: [10, 12, 25, 42, 27, 52, 40],
+            data: [10, 12, 25, 42, 27, 52, 40, 58],
             fill: false,
             borderColor: 'rgb(54, 162, 235)',
             backgroundColor: 'rgb(54, 162, 235)',
@@ -30,7 +31,7 @@ const data = {
         {
             type: 'bar',
             label: 'Необходимое',
-            data: [16, 20, 30, 40, 50, 60, 50],
+            data: [16, 20, 30, 40, 50, 60, 50, 58],
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'red'
         },]
@@ -69,22 +70,25 @@ const myChart = new Chart(ctx, config);
 
 
 
-
+$("#zero_li").on("click", function () {
+    $(this).toggleClass("underline");
+    $("#first_li, #second_li, #third_li, #fourth_li").removeClass("underline");
+});
 $("#first_li").on("click", function () {
     $(this).toggleClass("underline");
-    $("#second_li, #third_li, #fourth_li").removeClass("underline");
+    $("#second_li, #third_li, #fourth_li, #zero_li").removeClass("underline");
 });
 $("#second_li").on("click", function () {
     $(this).toggleClass("underline");
-    $("#first_li, #third_li, #fourth_li").removeClass("underline");
+    $("#first_li, #third_li, #fourth_li, #zero_li").removeClass("underline");
 });
 $("#third_li").on("click", function () {
     $(this).toggleClass("underline");
-    $("#first_li, #second_li, #fourth_li").removeClass("underline");
+    $("#first_li, #second_li, #fourth_li, #zero_li").removeClass("underline");
 });
 $("#fourth_li").on("click", function () {
     $(this).toggleClass("underline");
-    $("#first_li, #third_li, #second_li").removeClass("underline");
+    $("#first_li, #third_li, #second_li, #zero_li").removeClass("underline");
 });
 
 
@@ -679,3 +683,241 @@ $(".progress").each(function () {
 
 
 
+
+////////////////////////////////////////////////
+
+
+
+
+// Return with commas in between
+var numberWithCommas = function (x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+var dataPack1 = [40, 47, 44, 38, 27];
+var dataPack2 = [20, 22, 37, 15, 24];
+var dates = ["September", "November", "October", "December"];
+
+var bar_ctx = document.getElementById('bar-chart');
+
+var bar_chart = new Chart(bar_ctx, {
+    type: 'bar',
+    data: {
+        labels: dates,
+        datasets: [
+            {
+                label: 'Необходимо',
+                data: dataPack1,
+                backgroundColor: "#512DA8",
+                hoverBackgroundColor: "#7E57C2",
+                hoverBorderWidth: 1
+            },
+            {
+                label: 'Фактическое',
+                data: dataPack2,
+                backgroundColor: "#FFA000",
+                hoverBackgroundColor: "#FFCA28",
+                hoverBorderWidth: 1
+            },
+        ]
+    },
+    options: {
+        animation: {
+            duration: 10,
+        },
+        tooltips: {
+            mode: 'label',
+            callbacks: {
+                label: function (tooltipItem, data) {
+                    return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+                }
+            }
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+                gridLines: { display: false },
+            }],
+            yAxes: [{
+                stacked: true,
+                ticks: {
+                    callback: function (value) { return numberWithCommas(value); },
+                },
+            }],
+        },
+        legend: { display: true }
+    },
+    plugins: [{
+        beforeInit: function (chart) {
+            chart.data.labels.forEach(function (value, index, array) {
+                var a = [];
+                a.push(value.slice(0, 5));
+                var i = 1;
+                while (value.length > (i * 5)) {
+                    a.push(value.slice(i * 5, (i + 1) * 5));
+                    i++;
+                }
+                array[index] = a;
+            })
+        }
+    }]
+});
+
+
+/////////////////////////////////////
+
+let array = [];
+const url = "http://192.168.0.108:8080/machine_status/?";
+async function api() {
+    let array = [];
+    let names = [];
+    let response = await fetch(url);
+    let arr = await response.json();
+    for (let i = 0; i < arr.length; i++) {
+        array.push(arr[i].occupiedPercent);
+        names.push(arr[i].name);
+    }
+    console.log(array)
+    return array, names;
+}
+// function api() {
+//     fetch(url)
+//         .then(arr => response.json())
+//         .then(array => {
+//             for (let i = 0; i < arr.length; i++) {
+//                 array.push(arr[i].occupiedPercent);
+//             }
+//         });
+// }
+
+
+console.log(array);
+api().then((arr, names) => {
+    array, names = arr, names;
+
+    console.log(array[0]);
+    let number = 0;
+    for (let i = 0; i < 20; i++) {
+        number = parseInt(array[i] * 100);
+        console.log(number);
+        if (number === 100) {
+            $(`#first_${i + 1}`).css("background", "purple");
+            $(`#third_${i + 1}`).css("background", "purple");
+        } else if (number < 100 && number >= 50) {
+            $(`#first_${i}`).css("background", "violet");
+            $(`#second_${i}`).css("background", "violet");
+            console.log("violet");
+        } else if (number < 50 && number >= 20) {
+            $(`#first_${i + 1}`).css("background", "gray");
+            $(`#4_${i + 1}`).css("background", "gray");
+            $(`#7_${i + 1}`).css("background", "gray");
+            console.log("gray");
+        } else if (number < 20 && number >= 10) {
+            $(`#first_${i + 1}`).css("background", "pink");
+            $(`#5_${i + 1}`).css("background", "pink");
+            console.log("pink");
+        } else if (array[i] == null) {
+            $(`#first_${i + 2}`).css("background", "pink");
+            $(`#first_${i + 2}`).on("click", function () {
+
+            });
+
+            $(`#6_${i}`).css("background", "black");
+            $(`#6_${i}`).text(names[i]);
+            $(`#6_${i + 1}`).text(names[i]);
+
+            $(`#6_${i + 2}`).on("click", function (e) {
+                console.log('Clicked')
+                console.log(e.target)
+                create_popup()
+            });
+            console.log("black");
+        }
+    }
+
+
+
+});
+
+
+is_popup_active = false
+function create_popup() {
+    let div = document.createElement('div')
+    div.id = 'viz'
+
+    document.body.append(div)
+    draw()
+    document.addEventListener('click', (e) => {
+        if (is_popup_active) {
+            if (!e.path.includes(document.getElementById('viz'))) {
+                is_popup_active = false
+                document.getElementById('viz').remove()
+            }
+        }
+    })
+    setTimeout(() => {
+        is_popup_active = true
+    }, 1000);
+}
+
+var viz;
+
+function draw() {
+    var config = {
+        container_id: "viz",
+        server_url: "bolt://192.168.0.108:7687",
+        server_user: "neo4j",
+        server_password: "neo4j",
+        labels: {
+            "Stanok": {
+                caption: 'name',
+                size: 15,
+                color: '#00BBBB'
+            },
+            "Aggregat": {
+                size: 15,
+                caption: 'name',
+            },
+            "WorkGroup": {
+                size: 10,
+                caption: 'name',
+            },
+            "Resource": {
+                size: 5,
+                caption: 'name'
+            }
+        },
+        relationships: {
+            "INPUTS": {
+                thickness: 1,
+                caption: false,
+            },
+            "OUTPUTS": {
+                thickness: 1,
+                caption: false,
+            },
+            "CONTAIN": {
+                thickness: 1,
+                caption: false,
+            },
+            "WORKS_FOR": {
+                thickness: 1,
+                caption: false
+            }
+        },
+        arrows: true,
+        hierarchical_sort_method: "directed",
+
+        initial_cypher: `
+            MATCH (a:Stanok)-[r1:OUTPUTS]->(b:Aggregat), (a:Stanok)<-[r2:INPUTS]-(c:Aggregat) WHERE a.fid = 'G_ATO2' 
+            MATCH (w:WorkGroup)<-[r3:CONTAIN]-(a)
+            MATCH (w)-[r4]-(f)
+            OPTIONAL MATCH (b)-[r5]-(d) 
+            OPTIONAL MATCH (e)-[r6]-(c)
+            RETURN a,b,c,d,e,w,f,r1,r2,r3,r4,r5,r6
+            `
+    };
+
+    viz = new NeoVis.default(config);
+    viz.render();
+}
